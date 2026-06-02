@@ -8,7 +8,7 @@ products = [
         "like": 152,
         "stock": 12,
         "keyword": ["자켓", "베이지", "빈티지"],
-        "image": "TETR/images/item_01.png"
+        "image": "images/item_01.png"
     },
 
     {
@@ -19,7 +19,7 @@ products = [
         "like": 134,
         "stock": 0,
         "keyword": ["목도리", "버건디", "겨울"],
-        "image": "TETR/images/item_02.png"
+        "image": "images/item_02.png"
     },
 
     {
@@ -30,29 +30,31 @@ products = [
         "like": 98,
         "stock": 1,
         "keyword": ["스커트", "화이트", "여름"],
-        "image": "TETR/images/item_03.png"
+        "image": "images/item_03.png"
     },
 
     {
         "id": 4,
         "name": "아방 아이보리 코트",
         "price": 31000,
+        "sale_price": 6200,
         "rating": 4.7,
         "like": 182,
         "stock": 9,
         "keyword": ["코트", "아방", "아이보리"],
-        "image": "TETR/images/item_04.png"
+        "image": "images/item_04.png"
     },
 
     {
         "id": 5,
         "name": "핑크 플라워 가디건",
         "price": 43000,
+        "sale_price": 17200,
         "rating": 4.5,
         "like": 167,
         "stock": 11,
         "keyword": ["니트", "핑크", "가디건"],
-        "image": "TETR/images/item_05.png"
+        "image": "images/item_05.png"
     },
 
     {
@@ -63,7 +65,7 @@ products = [
         "like": 201,
         "stock": 6,
         "keyword": ["셔츠", "봄", "청순"],
-        "image": "TETR/images/item_06.png"
+        "image": "images/item_06.png"
     },
 
     {
@@ -74,7 +76,7 @@ products = [
         "like": 223,
         "stock": 8,
         "keyword": ["니트", "핑크", "데이트"],
-        "image": "TETR/images/item_07.png"
+        "image": "images/item_07.png"
     },
 
     {
@@ -85,7 +87,7 @@ products = [
         "like": 88,
         "stock": 14,
         "keyword": ["블라우스", "민트", "여름"],
-        "image": "TETR/images/item_08.png"
+        "image": "images/item_08.png"
     },
 
     {
@@ -96,7 +98,7 @@ products = [
         "like": 176,
         "stock": 10,
         "keyword": ["슬리브리스", "여름", "바캉스"],
-        "image": "TETR/images/item_09.png"
+        "image": "images/item_09.png"
     },
 
     {
@@ -107,7 +109,7 @@ products = [
         "like": 159,
         "stock": 13,
         "keyword": ["청", "스커트", "청순"],
-        "image": "TETR/images/item_10.png"
+        "image": "images/item_10.png"
     },
 
     {
@@ -118,7 +120,7 @@ products = [
         "like": 264,
         "stock": 5,
         "keyword": ["자켓", "가을", "빈티지"],
-        "image": "TETR/images/item_11.png"
+        "image": "images/item_11.png"
     },
 
     {
@@ -129,7 +131,7 @@ products = [
         "like": 112,
         "stock": 16,
         "keyword": ["홈웨어", "핑크", "잠옷"],
-        "image": "TETR/images/item_12.png"
+        "image": "images/item_12.png"
     },
 
     {
@@ -140,7 +142,7 @@ products = [
         "like": 248,
         "stock": 7,
         "keyword": ["빈티지", "자켓", "감성"],
-        "image": "TETR/images/item_13.png"
+        "image": "images/item_13.png"
     },
 
     {
@@ -151,7 +153,7 @@ products = [
         "like": 171,
         "stock": 9,
         "keyword": ["데이트", "플라워", "스커트"],
-        "image": "TETR/images/item_14.png"
+        "image": "images/item_14.png"
     },
 
     {
@@ -162,7 +164,7 @@ products = [
         "like": 194,
         "stock": 10,
         "keyword": ["베이지", "무드", "감성"],
-        "image": "TETR/images/item_15.png"
+        "image": "images/item_15.png"
     },
 
     {
@@ -173,7 +175,7 @@ products = [
         "like": 287,
         "stock": 4,
         "keyword": ["무스탕", "겨울", "코디"],
-        "image": "TETR/images/item_16.png"
+        "image": "images/item_16.png"
     },
 
     {
@@ -184,7 +186,7 @@ products = [
         "like": 148,
         "stock": 12,
         "keyword": ["아이보리", "니트", "청순"],
-        "image": "TETR/images/item_17.png"
+        "image": "images/item_17.png"
     },
 
     {
@@ -195,7 +197,7 @@ products = [
         "like": 216,
         "stock": 8,
         "keyword": ["브라운", "와이드", "팬츠"],
-        "image": "TETR/images/item_18.png"
+        "image": "images/item_18.png"
     },
 
     {
@@ -206,7 +208,7 @@ products = [
         "like": 183,
         "stock": 6,
         "keyword": ["원피스", "플라워", "네이비"],
-        "image": "TETR/images/item_19.png"
+        "image": "images/item_19.png"
     },
 
     {
@@ -217,7 +219,7 @@ products = [
         "like": 165,
         "stock": 11,
         "keyword": ["데님", "부츠컷", "청바지"],
-        "image": "TETR/images/item_20.png"
+        "image": "images/item_20.png"
     }
 
 ]

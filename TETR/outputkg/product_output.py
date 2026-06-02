@@ -19,11 +19,13 @@ def show_products(product_list, product_frame, add_to_cart):
             relief="solid"
         )
 
+
         card.grid(
             row=row,
             column=column,
             padx=20,
-            pady=20
+            pady=20,
+            sticky="n"
         )
 
         card.grid_propagate(False)
@@ -76,14 +78,51 @@ def show_products(product_list, product_frame, add_to_cart):
         name_label.pack(anchor="w", padx=20)
 
 
-        price_label = tk.Label(
-            card,
-            text=f"{product['price']}원",
-            font=("Arial", 13),
-            bg="#f5f5f5"
-        )
+        if "sale_price" in product:
 
-        price_label.pack(anchor="w", padx=20)
+            price_frame = tk.Frame(
+                card,
+                bg="#f5f5f5"
+            )
+
+            price_frame.pack(
+                anchor="w",
+                padx=20
+            )
+
+            original_price = tk.Label(
+                price_frame,
+                text=f"{product['price']}원",
+                font=("Arial", 11, "overstrike"),
+                fg="gray",
+                bg="#f5f5f5"
+            )
+
+            original_price.pack(side="left")
+
+            sale_price = tk.Label(
+                price_frame,
+                text=f" → {product['sale_price']}원",
+                font=("Arial", 13, "bold"),
+                fg="red",
+                bg="#f5f5f5"
+            )
+
+            sale_price.pack(side="left")
+
+        else:
+
+            price_label = tk.Label(
+                card,
+                text=f"{product['price']}원",
+                font=("Arial", 13),
+                bg="#f5f5f5"
+            )
+
+            price_label.pack(
+                anchor="w",
+                padx=20
+            )
 
 
         rating_label = tk.Label(
@@ -135,7 +174,7 @@ def show_products(product_list, product_frame, add_to_cart):
             relief="flat",
 
             padx=10,
-            pady=4,
+            pady=10,
 
             cursor="hand2"
         )

@@ -74,3 +74,18 @@ class Cart:
     def clear_cart(self):
 
         self.head = None
+
+    def count_product(self, product):
+
+        count = 0
+
+        current = self.head
+
+        while current:
+
+            if current.data["id"] == product["id"]:
+                count += 1
+
+            current = current.next
+
+        return count

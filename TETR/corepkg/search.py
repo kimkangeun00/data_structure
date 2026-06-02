@@ -6,6 +6,9 @@ def search_name(products, keyword):
 
         if keyword in product["name"]:
             result.append(product)
+        
+        elif keyword in product["keyword"]:
+            result.append(product)
 
     return result
 

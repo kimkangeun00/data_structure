@@ -1,3 +1,8 @@
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+os.chdir(BASE_DIR)
+
 from corepkg.order import OrderQueue
 from corepkg.cart import Cart
 from tkinter import messagebox
@@ -16,6 +21,10 @@ from corepkg.sort import (
     sort_rating,
     sort_popular
 )
+
+from PIL import Image, ImageTk
+import os
+from tkinter import PhotoImage
 
 
 window = tk.Tk()
@@ -63,7 +72,8 @@ title = tk.Label(
     header_frame,
     text="TEAM TETR SHOP",
     font=("Arial", 20, "bold"),
-    bg="white"
+    bg="white",
+    cursor="hand2"
 )
 
 title.pack(
@@ -132,6 +142,7 @@ scrollable_frame = tk.Frame(
     canvas,
     bg="white"
 )
+scrollable_frame.configure(width=1200)
 
 scrollable_frame.bind(
     "<Configure>",
@@ -140,7 +151,7 @@ scrollable_frame.bind(
     )
 )
 
-canvas.create_window(
+canvas_window=canvas.create_window(
     (0, 0),
     window=scrollable_frame,
     anchor="nw"
@@ -155,6 +166,11 @@ canvas.pack(
     fill="both",
     expand=True
 )
+
+def resize_canvas(event):
+    canvas.itemconfig(canvas_window, width=event.width)
+
+canvas.bind("<Configure>", resize_canvas)
 
 scrollbar.pack(
     side="right",
@@ -174,10 +190,123 @@ canvas.bind_all(
     _on_mousewheel
 )
 
-product_frame = scrollable_frame
+
+banner_frame=tk.Frame(
+    scrollable_frame,
+    bg="white",
+    height=550
+)
+
+banner_frame.pack(
+    fill="x",
+    pady=20
+)
+
+product_frame=tk.Frame(
+    scrollable_frame,
+    bg="white"
+)
+
+banner_target={
+    0:1,
+    1:12,
+    2:16,
+    3:5
+}
+
+product_frame.pack()
+
+for i in range(5):
+    product_frame.grid_columnconfigure(i, weight=1)
+
+banner_images_list = []
+
+for i in range(5):
+
+    img_path = os.path.join(
+   BASE_DIR,
+   "banner_images",
+   f"banner_0{i+1}.png"
+  )
+
+
+    img = Image.open(img_path)
+
+    img.thumbnail((2450,470))
+
+    photo = ImageTk.PhotoImage(img)
+
+    banner_images_list.append(photo)
+
+    banner = tk.Label(
+        banner_frame,
+        image=photo,
+        bg="white",
+        bd=0,
+        highlightthickness=0,
+        cursor="hand2"
+    )
+
+    banner.grid(
+        row=0,
+        column=i,
+        padx=0,
+        sticky="nsew"
+    )
+
+    if i in banner_target:
+        banner.bind(
+            "<Button-1>",
+            lambda e, pid=banner_target[i]:
+            banner_add_product(pid)
+        )
+
+for i in range(5):
+    banner_frame.grid_columnconfigure(i, weight=1)
+
+banner_frame.grid_rowconfigure(0, weight=1)
+
+
+def go_home(event=None):
+    search_entry.delete(0,tk.END)
+    show_products(
+        products,
+        product_frame,
+        add_to_cart
+    )
+
+title.bind(
+    "<Button-1>",
+    go_home
+)
+
+def banner_add_product(product_id):
+
+    for product in products:
+
+        if product["id"] == product_id:
+
+            answer = messagebox.askyesno(
+                "상품 추가",
+                f"{product['name']}을(를)\n장바구니에 담으시겠습니까?"
+            )
+
+            if answer:
+                add_to_cart(product)
+
+            return
 
 def add_to_cart(product):
 
+    current_count=cart.count_product(product)
+
+    if current_count>=product["stock"]:
+        messagebox.showwarning(
+            "재고 부족",
+            "재고보다 많이 담을 수 없습니다."
+        )
+        return
+    
     cart.add_cart(product)
 
     messagebox.showinfo(
