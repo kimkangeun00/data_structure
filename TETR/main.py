@@ -1,8 +1,12 @@
+from corepkg.order import OrderQueue
 from corepkg.cart import Cart
 from tkinter import messagebox
+from outputkg.cart_output import open_cart
+from outputkg.order_output import open_orders
+from outputkg.product_output import show_products
 
 import tkinter as tk
-
+from datetime import datetime
 from data.products import products
 
 from corepkg.search import search_name
@@ -16,6 +20,7 @@ from corepkg.sort import (
 
 window = tk.Tk()
 
+order_queue = OrderQueue()
 cart = Cart()
 
 window.title("TEAM TETR SHOP")
@@ -24,47 +29,60 @@ window.state("zoomed")
 
 window.configure(bg="white")
 
-
-title = tk.Label(
-    window,
-    text="TEAM TETR SHOP",
-    font=("Arial", 24, "bold"),
+top_menu_frame = tk.Frame(
     bg="white"
 )
 
-title.pack(pady=10)
+top_menu_frame.pack(
+    fill="x",
+    pady=(10, 0),
+    padx=40
+)
+
+menu_frame = tk.Frame(
+    top_menu_frame,
+    bg="white"
+)
+
+menu_frame.pack(
+    side="right"
+)
+
+header_frame = tk.Frame(
+    window,
+    bg="white"
+)
+
+header_frame.pack(
+    fill="x",
+    pady=(10, 20),
+    padx=40
+)
+
+title = tk.Label(
+    header_frame,
+    text="TEAM TETR SHOP",
+    font=("Arial", 20, "bold"),
+    bg="white"
+)
+
+title.pack(
+    side="left",
+    padx=(80, 30)
+)
 
 search_frame = tk.Frame(
-    window,
+    header_frame,
     bg="white"
 )
 
 search_frame.pack(
-    fill="x",
-    pady=10
-)
-
-center_frame = tk.Frame(
-    search_frame,
-    bg="white"
-)
-
-center_frame.pack(
     side="left",
-    expand=True,
-    padx=(520, 0)
+    padx=(80,0),
+    pady=10,
 )
 
 
-right_frame = tk.Frame(
-    search_frame,
-    bg="white"
-)
-
-right_frame.pack(
-    side="right",
-    padx=(0, 300)
-)
 
 sort_frame = tk.Frame(
     window,
@@ -75,31 +93,88 @@ sort_frame.pack(
     pady=5
 )
 
-top_frame = tk.Frame(
-    window,
-    bg="white"
-)
+search_outer = tk.Frame(
+    search_frame,
+    bg="#f1f1f1",
+    padx=20,
+    pady=4
+    )
 
-top_frame.pack(
-    pady=10
+search_outer.pack(
+    side="left",
+    padx=20
 )
-
 search_entry = tk.Entry(
-    center_frame,
-    font=("Arial", 14)
+    search_outer,
+    font=("맑은 고딕", 14),
+    bd=0,
+    bg="#f1f1f1",
+    width=55
 )
 
 search_entry.pack(
-    side="left",
-    padx=5
+    side="left"
 )
 
-product_frame = tk.Frame(
+canvas = tk.Canvas(
     window,
+    bg="white",
+    highlightthickness=0
+)
+
+scrollbar = tk.Scrollbar(
+    window,
+    orient="vertical",
+    command=canvas.yview
+)
+
+scrollable_frame = tk.Frame(
+    canvas,
     bg="white"
 )
 
-product_frame.pack(fill="both", expand=True)
+scrollable_frame.bind(
+    "<Configure>",
+    lambda e: canvas.configure(
+        scrollregion=canvas.bbox("all")
+    )
+)
+
+canvas.create_window(
+    (0, 0),
+    window=scrollable_frame,
+    anchor="nw"
+)
+
+canvas.configure(
+    yscrollcommand=scrollbar.set
+)
+
+canvas.pack(
+    side="left",
+    fill="both",
+    expand=True
+)
+
+scrollbar.pack(
+    side="right",
+    fill="y"
+)
+
+def _on_mousewheel(event):
+
+    canvas.yview_scroll(
+        int(-1 * (event.delta / 120)),
+        "units"
+    )
+
+
+canvas.bind_all(
+    "<MouseWheel>",
+    _on_mousewheel
+)
+
+product_frame = scrollable_frame
 
 def add_to_cart(product):
 
@@ -110,187 +185,8 @@ def add_to_cart(product):
         f"{product['name']} 장바구니 추가 완료"
     )
 
-def open_cart():
-
-    cart_window = tk.Toplevel(window)
-
-    cart_window.title("장바구니")
-
-    cart_window.geometry("500x500")
 
 
-    title = tk.Label(
-        cart_window,
-        text="장바구니 목록",
-        font=("Arial", 20, "bold")
-    )
-
-    title.pack(pady=20)
-
-
-    items = cart.get_items()
-
-
-    if len(items) == 0:
-
-        empty_label = tk.Label(
-            cart_window,
-            text="장바구니가 비어있습니다."
-        )
-
-        empty_label.pack()
-
-        return
-
-
-    for product in items:
-
-        item_frame = tk.Frame(
-            cart_window,
-            bd=1,
-            relief="solid",
-            padx=10,
-            pady=10
-        )
-
-        item_frame.pack(
-            fill="x",
-            padx=20,
-            pady=10
-        )
-
-
-        name_label = tk.Label(
-            item_frame,
-            text=product["name"],
-            font=("Arial", 14, "bold")
-        )
-
-        name_label.pack(anchor="w")
-
-
-        price_label = tk.Label(
-            item_frame,
-            text=f"{product['price']}원"
-        )
-
-        price_label.pack(anchor="w")
-
-def show_products(product_list):
-
-    for widget in product_frame.winfo_children():
-        widget.destroy()
-
-    row = 0
-    column = 0
-
-    for product in product_list:
-
-        card = tk.Frame(
-            product_frame,
-            bg="#f5f5f5",
-            width=300,
-            height=400,
-            bd=1,
-            relief="solid"
-        )
-
-        card.grid(
-            row=row,
-            column=column,
-            padx=20,
-            pady=20
-        )
-
-        card.grid_propagate(False)
-
-
-        image_space = tk.Frame(
-            card,
-            bg="#d9d9d9",
-            width=250,
-            height=200
-        )
-
-        image_space.pack(
-            pady=15
-        )
-
-        image_space.pack_propagate(False)
-
-
-        image_label = tk.Label(
-            image_space,
-            text="IMAGE",
-            bg="#d9d9d9",
-            font=("Arial", 14)
-        )
-
-        image_label.place(
-            relx=0.5,
-            rely=0.5,
-            anchor="center"
-        )
-
-
-        name_label = tk.Label(
-            card,
-            text=product["name"],
-            font=("Arial", 15, "bold"),
-            bg="#f5f5f5"
-        )
-
-        name_label.pack(anchor="w", padx=20)
-
-
-        price_label = tk.Label(
-            card,
-            text=f"{product['price']}원",
-            font=("Arial", 13),
-            bg="#f5f5f5"
-        )
-
-        price_label.pack(anchor="w", padx=20)
-
-
-        rating_label = tk.Label(
-            card,
-            text=f"⭐ {product['rating']}",
-            font=("Arial", 12),
-            bg="#f5f5f5"
-        )
-
-        rating_label.pack(anchor="w", padx=20)
-
-
-        like_label = tk.Label(
-            card,
-            text=f"♥ {product['like']}",
-            font=("Arial", 12),
-            bg="#f5f5f5"
-        )
-
-        like_label.pack(anchor="w", padx=20)
-
-
-        cart_button = tk.Button(
-            card,
-            text="장바구니 담기",
-            command=lambda p=product:
-            add_to_cart(p)
-        )
-
-        cart_button.pack(
-            pady=10
-        )
-
-
-        column += 1
-
-        if column > 5:
-         column = 0
-         row += 1
-        
 
 
 def search_product():
@@ -302,47 +198,91 @@ def search_product():
         keyword
     )
 
-    show_products(result)
-
+    show_products(
+    result,
+    product_frame,
+    add_to_cart
+)
 
 search_button = tk.Button(
-    center_frame,
-    text="검색",
-    command=search_product,
-    font=("Arial", 12)
+    search_outer,
+    text="⌕",
+    font=("맑은 고딕", 18),
+    bd=0,
+    bg="#f1f1f1",
+    activebackground="#f1f1f1",
+    cursor="hand2",
+    command=search_product
 )
 
 search_button.pack(
     side="left",
-    padx=5)
+    padx=10
+)
+
 
 cart_open_button = tk.Button(
-    right_frame,
+    menu_frame,
     text="장바구니",
-    font=("Arial", 11),
-    command=open_cart
+    font=("맑은 고딕", 11),
+    command=lambda: open_cart(
+     window,
+     cart,
+     order_queue,
+     products,
+     show_products,
+     product_frame,
+     add_to_cart
+  ),
+    bg="white",
+    bd=0,
+    relief="flat",
+    cursor="hand2",
+    activebackground="white"
 )
 
 cart_open_button.pack(
     side="left",
-    padx=30
+    padx=10
 )
 order_button = tk.Button(
-    right_frame,
-    text="주문조회",
-    font=("Arial", 11)
+    menu_frame,
+    text="주문/배송",
+    font=("맑은 고딕", 11),
+    bg="white",
+    bd=0,
+    relief="flat",
+    cursor="hand2",
+    activebackground="white",
+    command=lambda: open_orders(
+    window,
+    order_queue
+)
 )
 
 order_button.pack(
     side="left",
-    padx=5
+    padx=10
 )
 
 price_button = tk.Button(
     sort_frame,
     text="가격순",
+    font=("맑은 고딕", 10),
+    fg="#2E2E2E",
+    bg="#f5f5f5",
+    bd=0,
+    relief="flat",
+    padx=12,
+    pady=5,
+    cursor="hand2",
+    activebackground="#ebebeb",
     command=lambda:
-    show_products(sort_price(products))
+    show_products(
+      sort_price(products),
+      product_frame,
+      add_to_cart
+)
 )
 
 price_button.pack(
@@ -354,8 +294,21 @@ price_button.pack(
 rating_button = tk.Button(
     sort_frame,
     text="별점순",
+    font=("맑은 고딕", 10),
+    fg="#2E2E2E",
+    bg="#f5f5f5",
+    bd=0,
+    relief="flat",
+    padx=12,
+    pady=5,
+    cursor="hand2",
+    activebackground="#ebebeb",
     command=lambda:
-    show_products(sort_rating(products))
+    show_products(
+        sort_rating(products),
+        product_frame,
+        add_to_cart
+    )   
 )
 
 rating_button.pack(
@@ -365,8 +318,21 @@ rating_button.pack(
 popular_button = tk.Button(
     sort_frame,
     text="인기순",
+    font=("맑은 고딕", 10),
+    fg="#2E2E2E",
+    bg="#f5f5f5",
+    bd=0,
+    relief="flat",
+    padx=12,
+    pady=5,
+    cursor="hand2",
+    activebackground="#ebebeb",
     command=lambda:
-    show_products(sort_popular(products))
+    show_products(
+    sort_popular(products),
+    product_frame,
+    add_to_cart
+)
 )
 
 popular_button.pack(
@@ -376,6 +342,10 @@ popular_button.pack(
 
 
 
-show_products(products)
+show_products(
+    products,
+    product_frame,
+    add_to_cart
+)
 
 window.mainloop()

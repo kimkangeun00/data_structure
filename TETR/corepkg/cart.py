@@ -22,13 +22,11 @@ class Cart:
             self.head = new_node
             return
 
-
         current = self.head
 
         while current.next:
 
             current = current.next
-
 
         current.next = new_node
 
@@ -46,3 +44,33 @@ class Cart:
             current = current.next
 
         return items
+
+
+    def remove_cart(self, product):
+
+        if self.head is None:
+            return
+
+        # 첫 노드 삭제
+        if self.head.data["id"] == product["id"]:
+
+            self.head = self.head.next
+            return
+
+        prev = self.head
+        current = self.head.next
+
+        while current:
+
+            if current.data["id"] == product["id"]:
+
+                prev.next = current.next
+                return
+
+            prev = current
+            current = current.next
+
+
+    def clear_cart(self):
+
+        self.head = None
